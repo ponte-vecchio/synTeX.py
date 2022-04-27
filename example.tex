@@ -1,0 +1,333 @@
+\documentclass[oneside]{syntexpydoc}
+
+\input{syntexpy.prf}
+\def\Mnt{\texttt{minted}}
+\def\Pyg{\texttt{pygments}}
+\def\Lst{\texttt{listings}}
+
+
+\begin{document}x
+
+\title{\Huge\bfseries \textcolor{lapislazuli}{\pylong}\vskip.333em\SynTeXpy\vskip.333em \textcolor{sunglow}{\pylong}}
+\author{\Large\bfseries Copyright~(C)~2022~ponte-vecchio}
+\date{\Large\today}
+\maketitle
+\begin{python}
+import math
+import sys
+
+def hash_fraction(m, n):
+    """Compute the hash of a rational number m / n.
+
+    Assumes m and n are integers, with n positive.
+    Equivalent to hash(fractions.Fraction(m, n)).
+
+    """
+    P = sys.hash_info.modulus
+    # Remove common factors of P.  (Unnecessary if m and n already coprime.)
+    while m % P == n % P == 0:
+        m, n = m // P, n // P
+
+    if n % P == 0:
+        hash_value = sys.hash_info.inf
+    else:
+        # Fermat's Little Theorem: pow(n, P-1, P) is 1, so
+        # pow(n, P-2, P) gives the inverse of n modulo P.
+        hash_value = (abs(m) % P) * pow(n, P - 2, P) % P
+    if m < 0:
+        hash_value = -hash_value
+    if hash_value == -1:
+        hash_value = -2
+    return hash_value
+
+def hash_float(x):
+    """Compute the hash of a float x."""
+
+    if math.isnan(x):
+        return object.__hash__(x)
+    elif math.isinf(x):
+        return sys.hash_info.inf if x > 0 else -sys.hash_info.inf
+    else:
+        return hash_fraction(*x.as_integer_ratio())
+
+def hash_complex(z):
+    """Compute the hash of a complex number z."""
+
+    hash_value = hash_float(z.real) + sys.hash_info.imag * hash_float(z.imag)
+    # do a signed reduction modulo 2**sys.hash_info.width
+    M = 2**(sys.hash_info.width - 1)
+    hash_value = (hash_value & (M - 1)) - (hash_value & M)
+    if hash_value == -1:
+        hash_value = -2
+    return hash_value
+\end{python}
+\frontmatter
+\tableofcontents
+\mainmatter
+\chapter{Introduction}
+Being able to present code in any programming language is a crucial aspect of typing up a \LaTeX\ document.
+This experience is further enhanced by packages that offer syntax highlighting and direct file input. Currently, there are two main packages that serve this purpose: \Lst\ and \Mnt.
+
+\Mnt\footnotemark\ is a potent package that utilises an external engine i.e. Python's \Pyg \footnotemark\ library. Because \Pyg\ is actively maintained and regularly updated, \Mnt\ package offers up-to-date syntax highlighting functionality for just about any programming language. However, because it requires escaping the shell which poses a security challenge. In scenarios where the \verb|-shell-escape| option is not allowed, additional tweaks are required to achieve beautiful typesetting.\footnotemark~--- granted that you are the system administrator. There exists scenarios where you are not able to install pygments at all due to administrative settings imposed by your local sys. admin. which bars the user to give up hope and abandon using \Mnt\ altogether.
+
+\Lst\footnotemark\ is the old-reliable package that offers some syntax highlighting for some languages. 
+
+\footnotetext[1]{The \texttt{minted} Package. CTAN. \href{https://ctan.org/pkg/minted}{\tt https://ctan.org/pkg/minted}}
+\footnotetext[2]{\texttt{pygments} \faGithub{} Git Repository. \href{https://github.com/pygments/pygments}{\tt https://github.com/pygments/pygments}}
+\footnotetext[3]{The \texttt{listings} Package. CTAN. \href{https://ctan.org/pkg/listings}{\tt https://ctan.org/pkg/listings}}
+\footnotetext[4]{Poore, Geoffrey M. (2021) The \texttt{minted} package: Highlighted source code in \LaTeX.\\
+See page 12.
+\href{http://mirrors.ctan.org/macros/latex/contrib/minted/minted.pdf}{\tt http://mirrors.ctan.org/macros/latex/contrib/minted/minted.pdf}}
+
+\section{State of Syntax Highlighters for Python}
+\subsection{}
+
+\chapter{Implementation}
+Everything in Python goes through some sort of \emph{lexical analysis} --- much of \SynTeXpy\ was implemented by referring to the official Python \faPython{} documentation.
+
+\section{Sequence Types}
+
+These are in effect
+
+\chapter{Standard Library}
+% \foreach \f in \stdlibs{
+%     \sl\f\ 
+% }
+\pagebreak
+\section{\_\_future\_\_}
+Listing \verb|__future__| statements are shown below.
+
+\begin{python}
+import __future__ [as name]
+
+# Singular Import
+from __future__ import annotations
+
+# Multiple Imports
+from __future__ import (
+    nested_scopes,      # PEP227
+    generators,         # PEP255
+    division,           # PEP238
+    absolute_import,    # PEP328
+    with_statement,     # PEP343
+    print_function,     # PEP3105
+    unicode_literals,   # PEP3112
+    generator_stop,     # PEP479
+    annotations         # PEP563
+)
+\end{python}
+
+\section{\_\_main\_\_}
+Parsing \verb|__main__| is done in three ways.
+First is when it is used as the name of the top-level environment of a python programme, typically accompanied by \verb|__name__|. Because \verb|__main__| used in such scenarios is used as a string, it will be highlighted as a string:
+
+\begin{python}
+if __name__ == "__main__":
+    do ...
+\end{python}
+
+Second is when it is used as a file within python packages, e.g. \verb|__main__.py|. In such cases where \verb|__main__|, will be treated as an identifier:
+
+\begin{python}
+>>> import asyncio.__main__
+>>> asyncio.__main__.__name__
+'asyncio.__main__'
+\end{python}
+
+Third is when \verb|__main__| is used as a module of a top-level environment (i.e. namespace) --- which imports the module that received the special name \verb|'__main__'| rather than a \verb|__main__.py| file. In such cases, it is treated as a module:
+
+\begin{python}
+# foo.py
+
+import __main__
+def did_user_define_their_name():
+    return 'my_name' in dir(__main__)
+
+def print_user_name():
+    if not did_user_define_their_name():
+        raise ValueError('Define the variable `my_name`!')
+
+    if '__file__' in dir(__main__):
+        print(__main__.my_name, "found in file", __main__.__file__)
+    else:
+        print(__main__.my_name)
+\end{python}
+
+\section{\_thread}
+\begin{python}
+import _thread
+
+a_lock = _thread.allocate_lock()
+
+with a_lock:
+    print("a_lock is locked while this executes")
+\end{python}
+
+\section{abc}
+
+Examples of highlights relating to {\tt abc} class are shown below:
+\begin{python}
+from abc import ABC, ABCMeta
+
+class MyABC(ABC):
+    pass
+
+class MyABCMeta(metaclass=ABCMeta):
+    pass
+\end{python}
+
+\begin{python}
+class Foo:
+    def __getitem__(self, index):
+        ...
+    def __len__(self):
+        ...
+    def get_iterator(self):
+        return iter(self)
+
+class MyIterable(ABC):
+
+    @abstractmethod
+    def __iter__(self):
+        while False:
+            yield None
+
+    def get_iterator(self):
+        return self.__iter__()
+
+    @classmethod
+    def __subclasshook__(cls, C):
+        if cls is MyIterable:
+            if any("__iter__" in B.__dict__ for B in C.__mro__):
+                return True
+        return NotImplemented
+
+MyIterable.register(Foo)
+\end{python}
+
+\section{OS Library}
+\subsection{walk}
+\begin{python}
+import os
+from os.path import join, getsize
+for root, dirs, files in os.walk('python/Lib/email'):
+    print(root, "consumes", end=" ")
+    print(sum(getsize(join(root, name)) for name in files), end=" ")
+    print("bytes in", len(files), "non-directory files")
+    if 'CVS' in dirs:
+        dirs.remove('CVS')  # don't visit CVS directories
+\end{python}
+
+\begin{python}
+# Delete everything reachable from the directory named in "top",
+# assuming there are no symbolic links.
+# CAUTION:  This is dangerous!  For example, if top == '/', it
+# could delete all your disk files.
+import os
+for root, dirs, files in os.walk(top, topdown=False):
+    for name in files:
+        os.remove(os.path.join(root, name))
+    for name in dirs:
+        os.rmdir(os.path.join(root, name))
+\end{python}
+
+\pagebreak
+\lstinputlisting[language=Python3]{magic.py}
+
+% \begin{python}
+% # Literals
+% 1234
+% 0.0e101
+% .123
+% 0b01010011100
+% 0o01234567
+% 0x0987654321abcdef
+% 7
+% 2147483647
+% 3L
+% 79228162514264337593543950336L
+% 0x100000000L
+% 79228162514264337593543950336
+% 0xdeadbeef
+% 3.14j
+% 10.j
+% 10j
+% .001j
+% 1e100j
+% 3.14e-10j
+
+
+% # String Literals
+% 'For\''
+% "God\""
+% """so loved
+% the world"""
+% '''that he gave
+% his only begotten\' '''
+% 'that whosoever believeth \
+% in him'
+% ''
+
+% # Identifiers
+% __a__
+% a.b
+% a.b.c
+
+% # Operators
+% + - * / % & | ^ ~ < >
+% == != <= >= <> << >> // **
+% and or not in is
+
+% #infix matrix multiplication operator (PEP 465)
+% A @ B
+
+% # Delimiters
+% (), [], {} , : ` = ; @ .
+% A += B -= C *= D /= E %= F &= G |= H ^= J
+% K //= L >>= M <<= O **= P
+
+% # Keywords
+% as assert break class continue def del elif else except
+% finally for from global if import lambda pass raise
+% return try while with yield
+
+% # Types
+% bool classmethod complex dict enumerate float frozenset int list object
+% property reversed set slice staticmethod str super tuple type
+
+% # Python 2 Types (otherwise Identifiers)
+% basestring buffer file long unicode xrange
+
+% # Python 3 Types (otherwise Identifiers)
+% bytearray bytes filter map memoryview open range zip
+
+% # Some Example code
+% import os
+% from package import ParentClass
+
+% @nonsenseDecorator
+% def doesNothing():
+%     pass
+
+% class ExampleClass(ParentClass):
+%     @staticmethod
+%     def example(inputStr):
+%         a = list(inputStr)
+%         a.reverse()
+%         return ''.join(a)
+
+%     def __init__(self, mixin = 'Hello'):
+%         self.mixin = mixin
+
+% # Python 3.6 f-strings (https://www.python.org/dev/peps/pep-0498/)
+% f'My name is {name}, my age next year is {age+1}, my anniversary is {anniversary:%A, %B %d, %Y}.'
+% f'He said his name is {name!r}.'
+% f"""He said his name is {name!r}."""
+% f'{"quoted string"}'
+% f'{{ {4*10} }}'
+% f'This is an error }'
+% f'This is ok }}'
+% fr'x={4*10}\n'
+% \end{python}
+
+\end{document}
