@@ -1,0 +1,454 @@
+%%
+%% Python definitions (c) 2021 - 2022 ponte-vecchio
+%%
+\usepackage{tcolorbox}
+\tcbuselibrary{listings, breakable}
+\newtcblisting{python}{
+    breakable,
+    colback=colback,
+    listing only,
+    listing options={
+        columns=fullflexible,
+        language=Python3
+    }
+}
+% Default Colours
+\usepackage{xcolor}
+\definecolor{fg}{HTML}{000000}\definecolor{bg}{HTML}{FFFFFF}
+% \definecolor{black}{HTML}{1d1f21}\definecolor{brightblack}{HTML}{969896}
+% \definecolor{red}{HTML}{cc342b}\definecolor{brightred}{HTML}{cc342b}
+% \definecolor{green}{HTML}{198844}\definecolor{brightgreen}{HTML}{198844}
+% \definecolor{yellow}{HTML}{fba922}\definecolor{brightyellow}{HTML}{fba922}
+% \definecolor{blue}{HTML}{3971ed}\definecolor{brightblue}{HTML}{3971ed}
+% \definecolor{magenta}{HTML}{a36ac7}\definecolor{brightmagenta}{HTML}{a36ac7}
+% \definecolor{cyan}{HTML}{3971ed}\definecolor{brightcyan}{HTML}{3971ed}
+% \definecolor{white}{HTML}{c5c8c6}\definecolor{brightwhite}{HTML}{FFFFFF}
+
+\makeatletter
+\def\STP@ThemeGithub{% Github colours
+	\definecolor{alert}{HTML}{8A3E16}
+	\definecolor{colback}{HTML}{FFFFFF}
+	\definecolor{comment}{HTML}{7B8189}
+	\definecolor{function}{HTML}{7B52D7}
+	\definecolor{identifier}{HTML}{7B52D7}
+	\definecolor{keyword}{HTML}{BE3536}
+	\definecolor{module}{HTML}{27292E}
+	\definecolor{operator}{HTML}{3D4FA7}
+	\definecolor{string}{HTML}{253065}
+	\definecolor{text}{HTML}{27292E}
+	\def\STP@basic{\ttfamily\footnotesize}
+	\def\STP@cmt{\ttfamily\color{comment}}
+	\def\STP@dec{\ttfamily\color{decorator}}
+	\def\STP@err{\ttfamily\color{alert}}
+	\def\STP@fnstdlib{\ttfamily\color{function}}
+	\def\STP@fnother{\ttfamily\color{function}}
+	\def\STP@id{\ttfamily\color{identifier}}
+	\def\STP@kw{\ttfamily\color{keyword}}
+	\def\STP@op{\ttfamily\color{operator}}
+	\let\STP@spkw\STP@kw
+	\def\STP@mod{\ttfamily\color{module}}
+	\def\STP@str{\ttfamily\color{string}}
+	\def\STP@txt{\ttfamily\color{text}}
+}
+\def\STP@ThemeJupyter{% Jupyter Notebook colours
+	\definecolor{alert}{HTML}{9D30F6}
+	\definecolor{colback}{HTML}{F7F7F7}
+	\definecolor{comment}{HTML}{347778}
+	\definecolor{function}{HTML}{171717}%448630
+	\definecolor{identifier}{HTML}{2323F5}
+	\definecolor{keyword}{HTML}{377E22}
+	\definecolor{module}{HTML}{2323F5}
+	\definecolor{operator}{HTML}{9C2FF6}
+	\definecolor{string}{HTML}{AB312A}
+	\definecolor{text}{HTML}{171717}
+	\def\STP@basic{\ttfamily\footnotesize}
+	\def\STP@const{\ttfamily\color{alert}}
+	\def\STP@cmt{\ttfamily\itshape\color{comment}}
+	\def\STP@err{\ttfamily\color{alert}}
+	\def\STP@dec{\ttfamily\color{decorator}}
+	\def\STP@fnstdlib{\ttfamily\color{function}}
+	\def\STP@fnother{\ttfamily\color{function}}
+	\def\STP@id{\ttfamily\color{identifier}}
+	\def\STP@op{\ttfamily\color{operator}}
+	\def\STP@kw{\ttfamily\bfseries\color{keyword}}
+	\let\STP@spkw\STP@kw
+	\def\STP@mod{\ttfamily\color{module}}
+	\def\STP@str{\ttfamily\color{string}}
+	\def\STP@txt{\ttfamily\color{text}}
+}
+\def\STP@ThemePyDoc{% Python Documentation Theme
+	\definecolor{black}{HTML}{171717}
+	\definecolor{blue}{HTML}{2323F5}
+	\definecolor{brown}{HTML}{A8533F}
+	\definecolor{darkred}{HTML}{AB312A}
+	\definecolor{turquoise}{HTML}{4D7A7A}
+	\definecolor{green}{HTML}{377E22}
+	\definecolor{grey}{HTML}{6D6D6C}
+	\definecolor{lime}{HTML}{F1FFD1}
+	\definecolor{magenta}{HTML}{9C2FF6}
+	% Assign Colours to Lexer Types
+	\colorlet{alert}{brown}
+	\colorlet{decorator}{magenta}
+	\colorlet{colback}{lime}
+	\colorlet{comment}{turquoise}
+	\colorlet{function}{green}
+	\colorlet{identifier}{black}
+	\colorlet{keyword}{green}
+	\colorlet{module}{blue}
+	\colorlet{specialkeyword}{magenta}
+	\colorlet{string}{darkred}
+	\colorlet{text}{black}
+	\colorlet{operator}{grey}
+	% Assign Formatting
+	\def\STP@basic		{\ttfamily\footnotesize}
+	\def\STP@cmt		{\itshape\color{comment}}
+	\def\STP@const		{\color{alert}}
+	\def\STP@err		{\color{alert}}
+	\def\STP@dec		{\color{decorator}}
+	\def\STP@fnstdlib	{\color{blue}}
+	\def\STP@fnother	{\color{function}}
+	\def\STP@id			{\color{identifier}}
+	\def\STP@op			{\color{operator}}
+	\def\STP@kw			{\bfseries\color{keyword}}
+	\def\STP@spkw		{\bfseries\color{specialkeyword}}
+	\def\STP@mod		{\bfseries\color{module}}
+	\def\STP@str		{\color{string}}
+	\def\STP@txt		{\color{text}}
+}
+\STP@ThemePyDoc
+\colorlet{tabcolor}{comment!20!colback}
+\def\STP@tab			{\ttfamily\color{tabcolor}\dotfill}
+
+\lstdefinelanguage{Python3}{%
+	basicstyle=\STP@basic,
+	keywordstyle=\STP@kw,
+	identifierstyle=\STP@id,
+	stringstyle=\STP@str,
+	commentstyle=\STP@cmt,
+	fontadjust=true,
+	breaklines=true,
+	showstringspaces=false,
+	tab=\STP@tab,
+	tabsize=4,
+	showtabs,
+	sensitive=true,
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%		Literals
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	% Delims
+	moredelim=[l]{>}{:},% Type hints
+	moredelim=[l][\STP@txt]{[}{]},% Lists
+	moredelim=[l][\STP@txt]{\{}{\}},% Dicts/sets/f-string args
+	moredelim=[l][\STP@txt]{(}{)},% Tuples
+	literate=*%
+		{->}{{\color{operator}{-\textgreater\ }}}{3}%
+		% {>>>}{{\color{alert}{\textgreater\textgreater\textgreater\ }}}{4}%
+		{0b}{{\color{operator}{0b}}}{2}%
+		{0o}{{\color{operator}{0o}}}{2}%
+		{0x}{{\color{operator}{0x}}}{2},%
+	% Comments
+	morecomment=[l]{\#},% true comment
+	morecomment=[l][\STP@dec]{\@},% decorator
+	morecomment=[s]{'''}{'''},% docstring
+	morecomment=[s]{"""}{"""},% docstring
+	% String literals
+	morestring=[b]', morestring=[b]{"},%
+	morestring=[b]''', morestring=[b]""",%
+	morestring=[s]{f'}{'}, morestring=[s]{f"}{"},%
+	morestring=[s]{f'''}{'''}, morestring=[s]{f"""}{"""},%
+	morestring=[s]{fr'}{'}, morestring=[s]{fr"}{"},%
+	morestring=[s]{fr'''}{'''}, morestring=[s]{fr"""}{"""},%
+	morestring=[s]{rf'}{'}, morestring=[s]{rf"}{"},%
+	morestring=[s]{rf'''}{'''}, morestring=[s]{rf"""}{"""},%
+	morestring=[s]{R'}{'}, morestring=[s]{R"}{"},%
+	morestring=[s]{R'''}{'''}, morestring=[s]{R"""}{"""},%
+	morestring=[s]{F'}{'}, morestring=[s]{F"}{"},%
+	morestring=[s]{F'''}{'''}, morestring=[s]{F"""}{"""},%
+	morestring=[s]{U'}{'}, morestring=[s]{U"}{"},%
+	morestring=[s]{U'''}{'''}, morestring=[s]{U"""}{"""},%
+	morestring=[s]{Fr'}{'}, morestring=[s]{Fr"}{"},%
+	morestring=[s]{Fr'''}{'''}, morestring=[s]{Fr"""}{"""},%
+	morestring=[s]{fR'}{'}, morestring=[s]{fR"}{"},%
+	morestring=[s]{fR'''}{'''}, morestring=[s]{fR"""}{"""},%
+	morestring=[s]{FR'}{'}, morestring=[s]{FR"}{"},%
+	morestring=[s]{FR'''}{'''}, morestring=[s]{FR"""}{"""},%
+	morestring=[s]{rF'}{'}, morestring=[s]{rF"}{"},%
+	morestring=[s]{rF'''}{'''}, morestring=[s]{rF"""}{"""},%
+	morestring=[s]{Rf'}{'}, morestring=[s]{Rf"}{"},%
+	morestring=[s]{Rf'''}{'''}, morestring=[s]{Rf"""}{"""},%
+	morestring=[s]{RF'}{'}, morestring=[s]{RF"}{"},%
+	morestring=[s]{RF'''}{'''}, morestring=[s]{RF"""}{"""},%
+	% Byte literals
+	morestring=[s]{b'}{'}, morestring=[s]{b"}{"},%
+	morestring=[s]{b'''}{'''}, morestring=[s]{b"""}{"""},%
+	morestring=[s]{br'}{'}, morestring=[s]{br"}{"},%
+	morestring=[s]{br'''}{'''}, morestring=[s]{br"""}{"""},%
+	morestring=[s]{rb'}{'}, morestring=[s]{rb"}{"},%
+	morestring=[s]{rb'''}{'''}, morestring=[s]{rb"""}{"""},%
+	morestring=[s]{Br'}{'}, morestring=[s]{Br"}{"},%
+	morestring=[s]{Br'''}{'''}, morestring=[s]{Br"""}{"""},%
+	morestring=[s]{bR'}{'}, morestring=[s]{bR"}{"},%
+	morestring=[s]{bR'''}{'''}, morestring=[s]{bR"""}{"""},%
+	morestring=[s]{BR'}{'}, morestring=[s]{BR"}{"},%
+	morestring=[s]{BR'''}{'''}, morestring=[s]{BR"""}{"""},%
+	morestring=[s]{rB'}{'}, morestring=[s]{rB"}{"},%
+	morestring=[s]{rB'''}{'''}, morestring=[s]{rB"""}{"""},%
+	morestring=[s]{Rb'}{'}, morestring=[s]{Rb"}{"},%
+	morestring=[s]{Rb'''}{'''}, morestring=[s]{Rb"""}{"""},%
+	morestring=[s]{RB'}{'}, morestring=[s]{RB"}{"},%
+	morestring=[s]{RB'''}{'''}, morestring=[s]{RB"""}{"""},%
+	% Operators
+	% otherkeywords={[9999]%
+	% ;, +, -, *, **, \&, /, //, \%, =, ~, :=, ==, !=, >, >=, <, <=, +=, -=, *=, /=, \%=, ^, |, >>, <<, <<=, >>=, **=, <<==, ^==, >>==, **==, |=, \&=, \@=, \%=, //=, /==},%
+	% keywordstyle={[9999]\STP@op},%
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%		Keywords [2] and Built-in Functions [3]
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	% Keywords set out by Python
+	morekeywords={[2]%
+	False, None, True, and, as, assert, async, await, break, class, continue, def, del, elif, else, except, finally, for, from, global, if, import, is, lambda, nonlocal, not, or, pass, raise, return, try, while, with, yield, match, case},%
+	keywordstyle={[2]\STP@kw},%
+	% Built-in Functions
+	morekeywords={[3]%
+	abs, aiter, all, any, anext, ascii, bin, bool, breakpoint, bytearray, bytes, callable, chr, cls, compile, complex, delattr, dict, dir, divmod, enumerate, eval, exec, filter, float, format, frozenset, getattr, globals, hasattr, hash, help, hex, id, input, int, isinstance, issubclass, iter, len, list, locals, map, max, memoryview, min, next, object, oct, open, ord, pow, print,property, range, repr, reversed, round, self, set, setattr, slice, sorted, staticmethod, str, sum, super, tuple, type, vars, zip, __import__},%
+	keywordstyle={[3]\STP@fnother},%
+	% Built-in Constants
+	morekeywords={[31]%
+		False, True, None, NotImplemented, Ellipsis, __debug__, quit, exit, copyright, credits, license%
+	},%
+	keywordstyle={[31]\STP@const},
+	%
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%		Exceptions and Errors [4]
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	morekeywords={[4]%
+	% Base exceptions
+	BaseException, Exception, ArithmeticError, BufferError, LookupError,%
+	% Concrete exceptions
+	AssertionError, AttributeError, EOFError, GeneratorExit, ImportError,%
+	ModuleNotFoundError, IndexError, KeyError, KeyboardInterrupt, MemoryError,%
+	NameError, NotImplementedError, OSError, OverflowError, RecursionError,%
+	ReferenceError, RuntimeError, StopIteration, StopAyncIteration, SyntaxError,%
+	IndentationError, TabError, SystemError, SystemExit, TypeError,%
+	UnboundLocalError, UnicodeError, UnicodeEncodeError, UnicodeDecodeError,%
+	UnicodeTranslateError, ValueError, ZeroDivisionError, EnvironmentError,%
+	IOError, WindowsError,%
+	% OS exceptions
+	BlockingIOError, ChildProcessError, ConnectionError, BrokenPipeError,%
+	ConnectionAbortedError, ConnectionRefusedError, ConnectionResetError,%
+	FileExistsError, FileNotFoundError, InterruptedError, IsADirectoryError,%
+	NotADirectoryError, PermissionError, ProcessLookupError, TimeoutError},%
+	keywordstyle={[4]\STP@err},%
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%		Escape Sequences [242]
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	alsoletter={\\},%
+	morekeywords=*{[242]\\newline, \\\\, \\', \\", \\a, \\b, \\f, \\n, \\r, \\t, \\v},%
+	keywordstyle={[242]\STP@err},%
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%		Standard Library/Modules [500]
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	morekeywords={[500]%
+		__future__, __main__, _thread,%
+		% A-C
+		abc, argparse, array, ast, asyncio, atexit, base64, bdb, binascii, binhex, bisect, builtins, bz2, calendar, cmath, cmd, code, codecs, codeop, collections, collections.abc, colorsys, compileall, concurrent, concurrent.futures, configparser, contextlib, contextvars, copy, copyreg, cProfile, csv, ctypes, curses, curses.ascii, curses.panel, curses.textpad,%
+		% D-F
+		dataclasses, datetime, datetime.datetime, dbm, decimal, difflib, dis, distutils, doctest, email, email.charset, email.contentmanager, email.encoders, email.errors, email.generator, email.header, email.headerregistry, email.iterators, email.message, email.mime, email.parser, email.policy, email.utils, encodings, encodings.idna, encodings.mbcs, encodings.utf_8_sig, ensurepip, enum, errno, faulthandler, fcntl, filecmp, fileinput, fnmatch, fractions, ftplib, functools,%
+		% G-L
+		gc, getopt, getpass, gettext, glob, graphlib, grp, gzip, hashlib, heapq, hmac, html, html.entities, html.parser, http, http.client, http.cookiejar, http.cookies, http.server, imaplib, importlib, importlib.abc, importlib.machinery, importlib.metadata, importlib.resources, importlib.util, inspect, io, ipaddress, itertools, json, json.tool, keyword, lib2to3, linecache, locale, logging, logging.config, logging.handlers, lzma,%
+		% M-Q
+		mailbox, mailcap, marshal, math, mimetypes, mmap, modulefinder, msvcrt, multiprocessing, netrc, nis, nntplib, numbers, operator, os, os.path, pathlib, pdb, pickle, pickletools, pkgutil, platform, plistlib, poplib, posix, pprint, profile, pstats, pty, pwd, py_compile, pyclbr, pydoc, queue, quopri,%
+		% R-T
+		random, re, readline, reprlib, resource, rlcompleter, runpy, sched, secrets, select, selectors, shelve, shlex, shutil, signal, site, smtplib, socket, socketserver, sqlite3, ssl, stat, statistics, string, stringprep, struct, subprocess, symtable, sys, sysconfig, syslog, tabnanny, tarfile, tempfile, termios, test, test.support, test.support.bytecode_helper, test.support.import_helper, test.support.os_helper, test.support.script_helper, test.support.socket_helper, test.support.threading_helper, test.support.warnings_helper, textwrap, threading, time, timeit, tkinter, token, tokenize, trace, traceback, tracemalloc, tty, turtle, turtledemo, types, typing,%
+		% U-Z
+		unicodedata, unittest, unittest.mock, urllib, urllib.error, urllib.parse, urllib.request, urllib.response, utllib.robotparser, uuid, venv, warnings, wave, weakref, webbrowser, winreg, winsound, wsgiref, xml, xml.dom, xml.dom.minidom, xml.dom.pulldom, xml.etree.ElementTree, xml.parsers.expat, xml.parsers.expat.errors, xml.parsers.expat.model, xml.sax, xml.sax.handler, xml.sax.saxutils, xml.sax.xmlreader, xmlrpc.client, xmlrpc.server, zipapp, zipfile, zipimport, zlib, zoneinfo},%
+	keywordstyle={[500]\STP@mod},%
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%		Classes, Objects in Standard Library [501]
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	morekeywords={[501]%
+		% abc
+		ABC, ABCMeta,%
+	},%
+	keywordstyle={[501]\STP@err},%
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%		Functions in Standard Library [502]
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	morekeywords={[502]%
+		% abc
+		register, __subclasshook__, get_cache_token, update_abstractmethods,
+		% int type methods
+		bit_length, bit_count, to_bytes, from_bytes, as_integer_ratio,%
+		% float type methods
+		is_integer, fromhex,%
+		% iterator types
+		__iter__, __next__, __len__, __getitem__, __dict__, __mro__,%
+		% list class functions
+		append, sort, sorted, cmp_to_key,%
+		% string methods
+		capitalize, casefold, center, count, encode, endswith, find, format, format_map, index, isalnum, isalpha, isascii, isdecimal, isdigit, isidentifier, islower, isnumeric, isprintable, isspace, istitle, isupper, join, ljust, lower, lstrip, makestrans, partition, removeprefix, removesuffix, replace, rfind, rindex, rjust, rpartition, rsplit, rstrip, split, splitlines, startswith, strip, swapcase, title, translate, upper, zfill,%
+		% bytes methods
+		fromhex, hex,%
+		% bytes & bytearray ops
+		count, removeprefix, removesuffix, decode, endswith, find, index, join, maketrans, partition, replace, rfind, rindex, rpartition, startswith, translate, center, ljust, lstrip, rjust, rsplit, rstrip, split, strip, capitalize, expandtabs, isalnum, isalpha, isdigit, islower, isspace, isupper, lower, splitlines, swapcase, title, upper, zfill%
+		% dict methods
+		del, iter, clear, copy, get, items, keys, pop, popitem, reversed, setdefault, update, values, mapping,%
+		% collections methods
+		deque, defaultdict,%
+		% os
+		error, ctermid, environ, environb, chdir, fchdir, getcwd, fsdecode, fspath, PathLike, __fspath__, getenv, getenvb, get_exec_path, getegid, geteuid, getgrouplist, getgroups, getlogin, getpgid, getpgrp, getpid, getppid, getpriority, getresuid, getresgid, getuid, initgroups, putenv, setegid, seteuid, setgid, setgroups, setpgrp, setpgid, setpriority, setregid, setresgid, setresuid, setreuid, getsize, getsid, setsid, setuid, strerror, supports_bytes_environ, umask, uname, unsetenv, fdopen, close, closerange, copy_file_range, device_encoding, dup, dup2, fchmod, fchown, fdatasync, fpathconf, fstat, fstatvfs, fsync, ftruncate, get_blocking, isatty, lockf, lseek, open, openpty, pipe, pipe2, posix_fallocate, posix_fadvise, pread, preadv, pwrite, pwritev, read, sendfile, set_blocking, splice, readv, tcgetpgrp, tcsetpgrp, ttyname, write, writev, get_terminal_size, terminal_size, columns, lines, get_inheritable, set_inheritable, get_handle_inheritable, set_handle_inheritable, access, chdir, chflags, chmod, chown, chroot, fchdir, getcwd, getcwdb, lchflags, lchmod, lchown, link, listdir, lstat, mkdir, makedirs, mkfifo, mknod, major, minor, makedev, pathconf, pathconf_names, readlink, remove, removedirs, rename, renames, replace, rmdir, scandir, close, DirEntry, path, inode, is_dir, is_file, is_symlink, stat, stat_result, st_mode, st_ino, st_dev, st_nlink, st_uid, st_gid, st_size, st_atime, st_mtime, st_ctime, st_atime_ns, st_mtime_ns, st_ctime_ns, st_blocks, st_blocks, st_blksize, st_rdev, st_flags, st_gen, st_birthtime, st_fstype, st_rsize, st_creator, st_type, st_file_attributes, st_reparse_tag, statvfs, supports_dir_fd, supports_effective_ids, supports_fd, supports_follow_symlinks, symlink, sync, truncate, unlink, utime, walk, fwalk, memfd_create, eventfd, eventfd_read, eventfd_write, getxattr, listxattr, removexattr, setxattr, abort, add_all_directory, execl, execle, execlp, execlpe, execv, execve, execvp, execvpe, _exit, fork, forkpty, kill, killpg, pidfd_open, plock, popen, posix_spawn, posix_spawnp, register_at_fork, spawnl, spawnle, spawnlp, spawnlpe, spawnv, spawnve, spawnvp, spawnvpe, startfile, system, times, wait, waitid, waitpid, wait3, wait4, waitstatus_to_exitcode, confstr, confstr_names, cpu_count, getloadavg, sysconf, sysconf_names, curdir, pardir, sep, altsep, extsep, pathsep, defpath, linesep, devnull, getrandom, urandom,%
+		% pathlib
+		Path,%
+		% regex
+		Pattern, Match,%
+		% site
+		quit, ext, copyright, credits, license, flags, mentions%
+	},%
+	keywordstyle={[502]\STP@fnstdlib},%
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%		Functions Outside Standard Library [999]
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	morekeywords={[999]%
+		self%
+	},%
+	keywordstyle={[999]\STP@fnother},%
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%		Constants [1001]
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	morekeywords={[1001]%
+		F_LOCK, F_TLOCK, F_ULOCK, F_TEST, SEEK_SET, SEEK_CUR, SEEK_END, PRIOR_PROCESS, PRIO_PGRP, PRIO_USER, OrderedDict, Counter, ChainMap, abc, Awaitable, Coroutine, AsyncIterable, AsyncIterator, AsyncGenerator, Iterable, Iterator, Generator, Reversble, Container, Collection, Callable, Set, MutableSet, Mapping, MutableMapping, Sequence, MutableSequence, ByteString, MappingView, KeysView, ItemsView, ValuesView, AbstractContextManager, AbstractAsyncContextManager, DEVNULL, PIPE%
+	},%
+	keywordstyle={[1001]\STP@const},%
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%		Special Keywords [9998]
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	morekeywords={[9998]in, _, >>>},%
+	keywordstyle={[9998]\STP@spkw},%
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\lstdefinestyle{leopython}{%
+	language=Python,
+	keywordstyle=\color{yellow},
+	basicstyle=\ttfamily\color{fg},
+	numberstyle=\small\sffamily\color{brightred},
+	stringstyle=\color{brightgreen},
+	commentstyle=\color{brightblack},
+	tab=$\color{blue!40!bg}\to$,
+	showtabs,
+	numbers=left,
+	numbersep=5pt,
+	%
+	% Literals
+	% String literals (3.10)
+	%
+	% Operators & Delimiters
+	% alsoletter={+, -, *, **, \&, /, //, \%, =, @, ~, :=, ==, !=, >, >=, <, <=, +=, -=, *=, /=, \%=, \^, |, ~, >>, <<, <<==, \^==, >>==, **==, |=, \&=, @=, \%=, //=, /==, ;},
+	moreemph=[25]{+, -, *, **, \&, /, //, \%, =, @, ~, :=, ==, !=, >, >=, <, <=, +=, -=, *=, /=, \%=, \^, |, ~, >>, <<, <<==, \^==, >>==, **==, |=, \&=, @=, \%=, //=, /==, ;},
+	emphstyle=[25]{\STP@op}
+	%
+	% Functions
+	moreemph=[30]{self, >>>},
+	moreemph=[2512]{%
+	% int type methods
+	bit_length, bit_count, to_bytes, from_bytes, as_integer_ratio,
+	% float type methods
+	is_integer, fromhex,
+	% iterator types
+	__iter__. __next__,
+	% list Class functions
+	sort, sorted, cmp_to_key,
+	% string methods
+	capitalize, casefold, center, count, encode, endswith, find, format,
+	format_map, index, isalnum, isalpha, isascii, isdecimal, isdigit,
+	isidentifier, islower, isnumeric, isprintable, isspace, istitle, isupper,
+	join, ljust, lower, lstrip, makestrans, partition, removeprefix,
+	removesuffix, replace, rfind, rindex, rjust, rpartition, rsplit, rstrip,
+	split, splitlines, startswith, strip, swapcase, title, translate, upper,
+	zfill,
+	% bytes methods
+	fromhex, hex,
+	% bytes & bytearray ops
+	count, removeprefix, removesuffix, decode, endswith, find, index, join,
+	maketrans, partition, replace, rfind, rindex, rpartition, startswith,
+	translate, center, ljust, lstrip, rjust, rsplit, rstrip, split, strip,
+	capitalize, expandtabs, isalnum, isalpha, isdigit, islower, isspace,
+	isupper, lower, splitlines, swapcase, title, upper, zfill
+	% dict methods
+	del, iter, clear, copy, get, items, keys, pop, popitem, reversed,
+	setdefault, update, values, mapping,
+	% collections methods
+	deque, defaultdict, OrderedDict, Counter, ChainMap, abc, Awaitable,
+	Coroutine, AsyncIterable, AsyncIterator, AsyncGenerator, Iterable, Iterator,
+	Generator, Reversble, Container, Collection, Callable, Set, MutableSet,
+	Mapping, MutableMapping, Sequence, MutableSequence, ByteString, MappingView,
+	KeysView, ItemsView, ValuesView,
+	% contextlib
+	AbstractContextManager, AbstractAsyncContextManager,
+	% pathlib
+	Path,
+	% regex
+	Pattern, Match,
+	% site
+	quit, ext, copyright, credits, license, flags, mentions
+	},
+	moreemph=[31]{array, clip, loc, to_csv, astype, choice, randint, DataFrame,
+	choices, append, to, split, floor, ceil, trunc},
+	%
+	moreemph=[4]{__name__, __init__, __str__, __repr__,
+	__cmp__, __eq__, __lt__, __le__, __ge__, __gt__, _,
+	__dict__, __func__, __getattr__, __code__, __class__,
+	__bases__, __qualname__, __mro__, __subclasses__},
+	%
+	% exceptions and errors
+	moreemph=[5]{%
+	% Base exceptions
+	BaseException, Exception, ArithmeticError, BufferError, LookupError,
+	% Concrete exceptions
+	AssertionError, AttributeError, EOFError, GeneratorExit, ImportError,
+	ModuleNotFoundError, IndexError, KeyError, KeyboardInterrupt, MemoryError,
+	NameError, NotImplementedError, OSError, OverflowError, RecursionError,
+	ReferenceError, RuntimeError, StopIteration, StopAyncIteration, SyntaxError,
+	IndentationError, TabError, SystemError, SystemExit, TypeError,
+	UnboundLocalError, UnicodeError, UnicodeEncodeError, UnicodeDecodeError,
+	UnicodeTranslateError, ValueError, ZeroDivisionError, EnvironmentError,
+	IOError, WindowsError,
+	% OS exceptions
+	BlockingIOError, ChildProcessError, ConnectionError, BrokenPipeError,
+	ConnectionAbortedError, ConnectionRefusedError, ConnectionResetError,
+	FileExistsError, FileNotFoundError, InterruptedError, IsADirectoryError,
+	NotADirectoryError, PermissionError, ProcessLookupError, TimeoutError},
+	%
+	%
+	% Common modules
+	moreemph=[999]{%
+	% standard modules
+	% a-c
+	asyncio,collections, contextlib,
+	% d-j
+	discord,json,
+	% k-o
+	logging,math,os,
+	% p-s
+	pathlib,random,re, site,
+	% t-z
+	time, timeit,
+	% other
+	matplotlib, np, numpy, pandas, pd, plt, pyplot},
+	%
+	emphstyle=[231]{\color{magenta}}, % keywords
+	emphstyle=[241]{\color{magenta}}, % str/byt literals
+	emphstyle=[242]{\color{magenta}}, % esc seqs
+	emphstyle=[25]{\color{brightcyan}}, % operators
+	emphstyle=[2512]{\color{brightblue}}, % type methods
+	emphstyle=[30]{\color{brightcyan}},
+	emphstyle=[31]{\color{brightblue}}, % functions
+	emphstyle=[4]{\color{brightmagenta}},
+	emphstyle=[5]{\bfseries\color{red}},
+	emphstyle=[999]{\color{brightyellow}}, % modules
+	%
+	breaklines=true,
+	prebreak=\mbox{{\color{brightblack}\scriptsize$\searrow$}},
+}
